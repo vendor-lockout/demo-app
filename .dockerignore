@@ -1,0 +1,17 @@
+*
+!/app
+!/bootstrap
+!/config
+!/database/factories
+!/database/migrations
+!/database/seeders
+!/public
+!/resources
+!/routes
+!/storage
+
+!/artisan
+!/composer.json
+!/composer.lock
+!/package.json
+!/vite.config.js
