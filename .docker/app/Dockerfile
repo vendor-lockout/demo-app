@@ -30,8 +30,12 @@ USER www-data
 ############################################
 FROM base AS deploy
 
+# Copy composer files
+
+COPY --chown=www-data:www-data composer.json composer.lock /var/www/html/
+
 # Install Composer
-RUN composer install --no-dev --no-interaction --no-progress --no-suggest --no-autoloader
+RUN composer install --no-dev --no-interaction --no-progress --no-autoloader
 
 # Copy the application files
 COPY --chown=www-data:www-data . /var/www/html
