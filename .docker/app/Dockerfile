@@ -29,9 +29,19 @@ USER www-data
 # Production Image
 ############################################
 FROM base AS deploy
+
+# Install Composer
+RUN composer install --no-dev --no-interaction --no-progress --no-suggest --no-autoloader
+
+# Copy the application files
 COPY --chown=www-data:www-data . /var/www/html
+
+# Dump the Composer autoloader
+RUN composer dump-autoload --optimize
 
 # Ensure PHP-FPM gracefully stops
 STOPSIGNAL SIGQUIT
 
 USER www-data
+
+ENV PHP_OPCACHE_ENABLE=1
