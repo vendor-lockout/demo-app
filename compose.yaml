@@ -1,0 +1,17 @@
+services:
+  app:
+    image: ghcr.io/vendor-lockout/demo-app:latest
+    build:
+      dockerfile: .docker/app/Dockerfile
+      context: .
+      target: development
+    environment:
+      PHP_OPCACHE_ENABLE: '0'
+      AUTORUN_ENABLED: 'false'
+      APP_KEY: 'base64:8zelM8qu7/JBkXUuYSOtzME7vN5AS26pP3ZmTSWO+cw='
+      LOG_CHANNEL: 'stderr'
+    volumes:
+      - .:/var/www/html
+    ports:
+      - '8080:8080'
+

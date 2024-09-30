@@ -14,8 +14,10 @@ FROM base AS development
 # We can pass USER_ID and GROUP_ID as build arguments
 # to ensure the www-data user has the same UID and GID
 # as the user running Docker.
-ARG USER_ID
-ARG GROUP_ID
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+USER root
 
 # Switch to root so we can set the user ID and group ID
 # Set the user ID and group ID for www-data
@@ -24,6 +26,9 @@ RUN docker-php-serversideup-set-id www-data $USER_ID:$GROUP_ID  && \
 
 # Drop privileges back to www-data
 USER www-data
+
+# Ensure PHP-FPM gracefully stops
+STOPSIGNAL SIGQUIT
 
 ############################################
 # Production Image
