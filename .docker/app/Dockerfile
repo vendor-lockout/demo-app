@@ -27,8 +27,25 @@ RUN docker-php-serversideup-set-id www-data $USER_ID:$GROUP_ID  && \
 # Drop privileges back to www-data
 USER www-data
 
-# Ensure PHP-FPM gracefully stops
-STOPSIGNAL SIGQUIT
+############################################
+# Frontend Image
+############################################
+FROM node:22-alpine AS frontend
+
+# Set the working directory
+WORKDIR /src
+
+# Copy the package.json and package-lock.json
+COPY package.json package-lock.json /src/
+
+# Install the dependencies
+RUN npm ci
+
+# Copy the rest of the files
+COPY . /src/
+
+# Build the assets
+RUN npm run build
 
 ############################################
 # Production Image
@@ -36,7 +53,6 @@ STOPSIGNAL SIGQUIT
 FROM base AS deploy
 
 # Copy composer files
-
 COPY --chown=www-data:www-data composer.json composer.lock /var/www/html/
 
 # Install Composer
@@ -44,15 +60,15 @@ RUN composer install --no-dev --no-interaction --no-progress --no-autoloader
 
 # Copy the application files
 COPY --chown=www-data:www-data . /var/www/html
+COPY --chown=www-data:www-data --from=frontend /src/public/build /var/www/html/public/build
 
 # Dump the Composer autoloader
 RUN composer dump-autoload --optimize
-
-# Ensure PHP-FPM gracefully stops
-STOPSIGNAL SIGQUIT
 
 USER www-data
 
 ENV PHP_OPCACHE_ENABLE=1
 ENV AUTORUN_ENABLED=true
 ENV AUTORUN_LARAVEL_MIGRATION=false
+
+ENV LOG_CHANNEL=stderr

@@ -5,7 +5,9 @@
 !/database/factories
 !/database/migrations
 !/database/seeders
-!/public
+!/public/favicon.ico
+!/public/index.php
+!/public/robots.txt
 !/resources
 !/routes
 !/storage
@@ -14,4 +16,5 @@
 !/composer.json
 !/composer.lock
 !/package.json
+!/package-lock.json
 !/vite.config.js
